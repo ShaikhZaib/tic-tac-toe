@@ -1,4 +1,11 @@
-console.log("Tic-Tac-Toe");
+const gameBoardElement = document.querySelector(".game-board");
+const gameStatus = document.querySelector(".game-status");
+const gameRestartBtn = document.querySelector(".game-restart-btn");
+
+gameRestartBtn.addEventListener("click", () => {
+  GameController.restartGame();
+  DisplayController.render();
+});
 
 function Player(name, marker) {
   return { name, marker };
@@ -123,3 +130,39 @@ const GameController = (() => {
     isGameOver,
   };
 })();
+
+const DisplayController = (() => {
+  function render() {
+    gameBoardElement.innerHTML = "";
+    const board = GameBoard.getBoard();
+
+    board.forEach((cell, index) => {
+      const div = document.createElement("div");
+      div.classList.add("cell");
+
+      div.addEventListener("click", () => {
+        GameController.playRound(index);
+        render();
+      });
+
+      div.textContent = cell;
+      div.dataset.index = index;
+
+      gameBoardElement.append(div);
+    });
+
+    if (GameController.isGameOver()) {
+      if (GameController.getWinner()) {
+        gameStatus.innerText = `${GameController.getWinner().name} wins`;
+      } else {
+        gameStatus.innerText = "It's a draw";
+      }
+    } else {
+      gameStatus.innerText = `Current Turn: ${GameController.getCurrentPlayer().name} (${GameController.getCurrentPlayer().marker})`;
+    }
+  }
+
+  return { render };
+})();
+
+DisplayController.render();
