@@ -140,6 +140,12 @@ const DisplayController = (() => {
       const div = document.createElement("div");
       div.classList.add("cell");
 
+      if (cell === "X") {
+        div.classList.add("x");
+      } else if (cell === "O") {
+        div.classList.add("o");
+      }
+
       div.addEventListener("click", () => {
         GameController.playRound(index);
         render();
